@@ -1,0 +1,17 @@
+# Dossiers node_modules — très volumineux, inutile de les envoyer
+node_modules
+client/node_modules
+server/node_modules
+
+# Fichiers d'environnement — contiennent les mots de passe
+.env
+server/.env
+client/.env
+
+# Dossiers de build
+client/dist
+server/dist
+
+# Fichiers système
+.DS_Store
+Thumbs.db
