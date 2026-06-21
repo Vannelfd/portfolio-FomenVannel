@@ -3,7 +3,7 @@
 // Fichier : client/src/components/Footer.jsx
 // ============================================
 
-import { Link } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 
 // ---- ICONES DES RESEAUX SOCIAUX ----
@@ -43,11 +43,11 @@ const TwitterIcon = () => (
 // "to" doit correspondre aux id des sections dans Home.jsx
 
 const navLinks = [
-  { label: 'Accueil', to: '/#accueil', icon: (<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>) },
-  { label: 'Competences', to: '/#competences', icon: (<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>) },
-  { label: 'Experiences', to: '/#experiences', icon: (<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>) },
-  { label: 'Projets', to: '/#projets', icon: (<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>) },
-  { label: 'Contact', to: '/#contact', icon: (<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>) },
+  { label: 'Accueil', id: 'accueil', icon: (<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>) },
+  { label: 'Competences', id: 'competences', icon: (<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>) },
+  { label: 'Experiences', id: 'experiences', icon: (<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>) },
+  { label: 'Projets', id: 'projets', icon: (<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>) },
+  { label: 'Contact', id: 'contact', icon: (<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#475569" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>) },
 ]
 
 // ---- LIENS DES RESEAUX SOCIAUX ----
@@ -55,9 +55,9 @@ const navLinks = [
 // Pour ajouter un reseau, ajoute un objet { icon, href, label }
 
 const socialLinks = [
-  { icon: <GitHubIcon />, href: 'https://github.com/vanneldf', label: 'GitHub' },
-  { icon: <LinkedInIcon />, href: 'https://linkedin.com/in/vannel-fomen', label: 'LinkedIn' },
-  { icon: <UpworkIcon />, href: 'https://upwork.com/freelancers/vanneldf', label: 'Upwork' },
+  { icon: <GitHubIcon />, href: 'https://github.com/new', label: 'GitHub' },
+  { icon: <LinkedInIcon />, href: 'https://www.linkedin.com/feed/', label: 'LinkedIn' },
+  { icon: <UpworkIcon />, href: 'https://www.upwork.com/nx/find-work/best-matches', label: 'Upwork' },
   { icon: <TwitterIcon />, href: 'https://twitter.com/vanneldf', label: 'Twitter' },
 ]
 
@@ -69,13 +69,25 @@ const linkStyle = {
   fontSize: '13px', color: '#64748B',
   marginBottom: '12px', textDecoration: 'none',
   transition: 'color 0.2s',
+  wordBreak: 'break-all',
+  overflowWrap: 'break-word',
 }
 
 // ---- COMPOSANT PRINCIPAL FOOTER ----
 
 function Footer() {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const [width, setWidth] = useState(window.innerWidth)
+  useEffect(function() {
+    function handle() { setWidth(window.innerWidth) }
+    window.addEventListener('resize', handle)
+    return function() { window.removeEventListener('resize', handle) }
+  }, [])
+  const isMobile = width < 640
+
   return (
-    <footer style={{ background: '#0F1729', padding: '48px 32px 24px' }}>
+    <footer style={{ background: '#0F1729', padding: isMobile ? '40px 16px 24px' : '48px 32px 24px' }}>
 
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
 
@@ -84,7 +96,7 @@ function Footer() {
         {/* Colonne 2 : Liens de navigation */}
         {/* Colonne 3 : Infos de contact + bouton CV */}
 
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '40px', marginBottom: '40px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '2fr 1fr 1fr', gap: isMobile ? '32px' : '40px', marginBottom: '40px' }}>
 
           {/* ---- COLONNE 1 : LOGO + DESCRIPTION + RESEAUX ---- */}
           <div>
@@ -93,7 +105,7 @@ function Footer() {
             <img src="/logo.png" alt="FOMEN Vannel" style={{ height: '40px', width: 'auto', objectFit: 'contain', marginBottom: '14px' }} />
 
             {/* Description courte — modifie ce texte selon ton profil */}
-            <p style={{ fontSize: '13px', color: '#64748B', lineHeight: '1.7', maxWidth: '280px', marginBottom: '20px' }}>
+            <p style={{ fontSize: '13px', color: '#64748B', lineHeight: '1.7', maxWidth: isMobile ? '100%' : '280px', marginBottom: '20px' }}>
               Developpeur Full Stack passionne, base a Douala, Cameroun. Je concois des applications web modernes et performantes.
             </p>
 
@@ -143,16 +155,27 @@ function Footer() {
             </div>
             {navLinks.map(function(link) {
               return (
-                <Link
-                  key={link.to}
-                  to={link.to}
+                <a
+                  key={link.id}
+                  href={'#' + link.id}
                   style={linkStyle}
                   onMouseEnter={function(e) { e.currentTarget.style.color = '#378ADD' }}
                   onMouseLeave={function(e) { e.currentTarget.style.color = '#64748B' }}
+                  onClick={function(e) {
+                    e.preventDefault()
+                    if (location.pathname !== '/') {
+                      navigate('/')
+                      setTimeout(function() {
+                        document.getElementById(link.id)?.scrollIntoView({ behavior: 'smooth' })
+                      }, 100)
+                    } else {
+                      document.getElementById(link.id)?.scrollIntoView({ behavior: 'smooth' })
+                    }
+                  }}
                 >
                   {link.icon}
                   {link.label}
-                </Link>
+                </a>
               )
             })}
           </div>
@@ -224,7 +247,7 @@ function Footer() {
         </div>
 
         {/* ---- BARRE DE SEPARATION ---- */}
-        <div style={{ borderTop: '1px solid rgba(59,130,246,0.1)', paddingTop: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
+        <div style={{ borderTop: '1px solid rgba(59,130,246,0.1)', paddingTop: '20px', display: 'flex', alignItems: 'center', justifyContent: isMobile ? 'center' : 'space-between', flexDirection: isMobile ? 'column' : 'row', flexWrap: 'wrap', gap: '8px', textAlign: isMobile ? 'center' : 'left' }}>
 
           {/* Copyright — met a jour l'annee si besoin */}
           <div style={{ fontSize: '12px', color: '#475569' }}>

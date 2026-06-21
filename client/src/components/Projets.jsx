@@ -211,6 +211,9 @@ function Projets() {
   const [darkMode, setDarkMode] = useState(
     document.documentElement.classList.contains('dark')
   )
+  const width = useWindowWidth()
+  const isMobile = width < 640
+  const isTablet = width < 1024
 
   useEffect(function() {
     getProjets().then(function(res) {
@@ -242,7 +245,7 @@ function Projets() {
     <section
       id="projets"
       style={{
-        padding: '80px 32px',
+        padding: isMobile ? '40px 16px' : '56px 32px',
         background: darkMode ? '#0F1729' : '#FFFFFF',
         transition: 'background 0.3s ease',
       }}
@@ -260,7 +263,7 @@ function Projets() {
           }}>
             Mes realisations
           </div>
-          <h2 style={{ fontSize: '36px', fontWeight: 700, color: darkMode ? '#E2E8F0' : '#1E293B', marginBottom: '4px' }}>
+          <h2 style={{ fontSize: isMobile ? '26px' : '36px', fontWeight: 700, color: darkMode ? '#E2E8F0' : '#1E293B', marginBottom: '4px' }}>
             Projets
           </h2>
           <p style={{ fontSize: '14px', color: darkMode ? '#64748B' : '#94a3b8', marginBottom: '8px' }}>
@@ -277,8 +280,8 @@ function Projets() {
                 key={filtre}
                 onClick={() => setFiltreActif(filtre)}
                 style={{
-                  fontSize: '13px', fontWeight: 500,
-                  padding: '11px 28px',
+                  fontSize: isMobile ? '12px' : '13px', fontWeight: 500,
+                  padding: isMobile ? '8px 16px' : '11px 28px',
                   borderRadius: '50px',
                   border: '2px solid ' + (actif ? '#378ADD' : (darkMode ? 'rgba(59,130,246,0.2)' : '#E2E8F0')),
                   background: actif ? '#378ADD' : (darkMode ? '#162032' : '#FFFFFF'),
@@ -317,7 +320,7 @@ function Projets() {
             Aucun projet dans cette categorie pour l'instant.
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '14px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)', gap: '14px' }}>
             {projetsFiltres.map(function(projet) {
               return (
                 <ProjetCard

@@ -48,22 +48,22 @@ const experiences = [
   },
 ]
 
-function ExperienceCard({ exp, index, visible, darkMode }) {
-  const isLeft = index % 2 === 0
+function ExperienceCard({ exp, index, visible, darkMode, isMobile }) {
+  const isLeft = !isMobile && index % 2 === 0
 
   return (
     <div style={{
       display: 'flex',
-      justifyContent: isLeft ? 'flex-start' : 'flex-end',
+      justifyContent: isMobile ? 'center' : (isLeft ? 'flex-start' : 'flex-end'),
       position: 'relative',
-      marginBottom: '40px',
+      marginBottom: isMobile ? '16px' : '40px',
       opacity: visible ? 1 : 0,
       transform: visible ? 'translateY(0)' : 'translateY(30px)',
       transition: 'opacity 0.6s ease ' + (index * 0.15) + 's, transform 0.6s ease ' + (index * 0.15) + 's',
     }}>
 
       <div style={{
-        width: '45%',
+        width: isMobile ? '100%' : '45%',
         background: darkMode ? '#162032' : '#FFFFFF',
         border: '1.5px solid ' + (darkMode ? 'rgba(59,130,246,0.15)' : 'rgba(147,197,253,0.3)'),
         borderRadius: '16px',
@@ -136,19 +136,21 @@ function ExperienceCard({ exp, index, visible, darkMode }) {
           })}
         </div>
 
-        <div style={{
-          position: 'absolute',
-          top: '24px',
-          [isLeft ? 'right' : 'left']: '-8px',
-          width: '14px',
-          height: '14px',
-          borderRadius: '50%',
-          background: '#378ADD',
-          border: '3px solid ' + (darkMode ? '#0F1729' : '#F8FAFF'),
-          zIndex: 2,
-        }} />
+        {!isMobile && (
+          <div style={{
+            position: 'absolute',
+            top: '24px',
+            [isLeft ? 'right' : 'left']: '-8px',
+            width: '14px',
+            height: '14px',
+            borderRadius: '50%',
+            background: '#378ADD',
+            border: '3px solid ' + (darkMode ? '#0F1729' : '#F8FAFF'),
+            zIndex: 2,
+          }} />
+        )}
 
-        {exp.badges[0] && (
+        {exp.badges[0] && !isMobile && (
           <div style={{
             position: 'absolute',
             top: '-14px',
@@ -169,7 +171,7 @@ function ExperienceCard({ exp, index, visible, darkMode }) {
           </div>
         )}
 
-        {exp.badges[1] && (
+        {exp.badges[1] && !isMobile && (
           <div style={{
             position: 'absolute',
             bottom: '-14px',
@@ -201,6 +203,8 @@ function Experiences() {
   const [darkMode, setDarkMode] = useState(
     document.documentElement.classList.contains('dark')
   )
+  const width = useWindowWidth()
+  const isMobile = width < 640
 
   useEffect(function() {
     const observer = new IntersectionObserver(
@@ -229,7 +233,7 @@ function Experiences() {
       id="experiences"
       ref={sectionRef}
       style={{
-        padding: '80px 32px',
+        padding: isMobile ? '40px 16px' : '56px 32px',
         background: darkMode ? '#0B1120' : '#FFFFFF',
         transition: 'background 0.3s ease',
       }}
@@ -246,7 +250,7 @@ function Experiences() {
       `}</style>
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
 
-        <div style={{ marginBottom: '56px' }}>
+        <div style={{ marginBottom: isMobile ? '32px' : '56px' }}>
           <div style={{
             display: 'inline-block',
             fontSize: '13px', fontWeight: 500,
@@ -257,7 +261,7 @@ function Experiences() {
           }}>
             Mon parcours
           </div>
-          <h2 style={{ fontSize: '36px', fontWeight: 700, color: darkMode ? '#E2E8F0' : '#1E293B', marginBottom: '8px' }}>
+          <h2 style={{ fontSize: isMobile ? '22px' : '36px', fontWeight: 700, color: darkMode ? '#E2E8F0' : '#1E293B', marginBottom: '8px' }}>
             Expériences professionnelles
           </h2>
           <div style={{ width: '40px', height: '3px', background: 'linear-gradient(90deg, #378ADD, #93C5FD)', borderRadius: '2px' }} />
@@ -265,7 +269,7 @@ function Experiences() {
 
         <div style={{ position: 'relative' }}>
 
-          <div style={{
+          {!isMobile && <div style={{
             position: 'absolute',
             left: '50%',
             top: 0, bottom: 0,
@@ -274,7 +278,7 @@ function Experiences() {
               ? 'linear-gradient(180deg, #1e3a5f, #378ADD, #1e3a5f)'
               : 'linear-gradient(180deg, #DBEAFE, #378ADD, #DBEAFE)',
             transform: 'translateX(-50%)',
-          }} />
+          }} />}
 
           {experiences.map(function(exp, index) {
             return (
@@ -284,6 +288,7 @@ function Experiences() {
                 index={index}
                 visible={visible}
                 darkMode={darkMode}
+                isMobile={isMobile}
               />
             )
           })}

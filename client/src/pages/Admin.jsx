@@ -2,9 +2,13 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getProjets, supprimerProjet } from '../api/index'
 import PopupProjet from '../components/PopupProjet'
+import useWindowWidth from '../hooks/useWindowWidth'
 
 function Admin() {
   const navigate = useNavigate()
+  const width = useWindowWidth()
+  const isMobile = width < 640
+  const isTablet = width < 900
   const [projets, setProjets] = useState([])
   const [loading, setLoading] = useState(true)
   const [popupOuvert, setPopupOuvert] = useState(false)
@@ -91,46 +95,60 @@ function Admin() {
   return (
     <div style={{ minHeight: '100vh', background: bg, transition: 'background 0.3s ease' }}>
 
+      {/* Header */}
       <div style={{
         background: card,
         borderBottom: '1.5px solid ' + border,
-        padding: '14px 32px',
+        padding: isMobile ? '12px 16px' : '14px 32px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        gap: '12px',
       }}>
-        <span style={{ fontSize: '20px', fontWeight: 700, color: '#378ADD', letterSpacing: '-0.5px' }}>
+        <span style={{ fontSize: isMobile ? '17px' : '20px', fontWeight: 700, color: '#378ADD', letterSpacing: '-0.5px', flexShrink: 0 }}>
           FV. Admin
         </span>
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
           <button
             onClick={() => navigate('/')}
             style={{
-              padding: '9px 20px', fontSize: '12px', fontWeight: 500,
+              padding: isMobile ? '7px 14px' : '9px 20px',
+              fontSize: '12px', fontWeight: 500,
               background: 'none', color: textSecondary,
               border: '2px solid ' + border, borderRadius: '50px', cursor: 'pointer',
               display: 'flex', alignItems: 'center', gap: '6px',
+              whiteSpace: 'nowrap',
             }}
           >
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
-            Portfolio
+            {isMobile ? 'Retour' : 'Portfolio'}
           </button>
           <button
             onClick={handleDeconnexion}
             style={{
-              padding: '9px 20px', fontSize: '12px', fontWeight: 500,
+              padding: isMobile ? '7px 14px' : '9px 20px',
+              fontSize: '12px', fontWeight: 500,
               background: 'none', color: '#e11d48',
               border: '2px solid #fda4af', borderRadius: '50px', cursor: 'pointer',
+              whiteSpace: 'nowrap',
             }}
           >
-            Deconnexion
+            {isMobile ? 'Sortir' : 'Deconnexion'}
           </button>
         </div>
       </div>
 
-      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '32px' }}>
+      {/* Contenu */}
+      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: isMobile ? '20px 16px' : '32px' }}>
 
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '28px', flexWrap: 'wrap', gap: '12px' }}>
+        {/* Titre + bouton ajouter */}
+        <div style={{
+          display: 'flex', alignItems: isMobile ? 'flex-start' : 'center',
+          justifyContent: 'space-between',
+          marginBottom: '24px',
+          flexDirection: isMobile ? 'column' : 'row',
+          gap: '14px',
+        }}>
           <div>
-            <h1 style={{ fontSize: '22px', fontWeight: 700, color: textPrimary, marginBottom: '4px' }}>
+            <h1 style={{ fontSize: isMobile ? '18px' : '22px', fontWeight: 700, color: textPrimary, marginBottom: '4px' }}>
               Dashboard Admin
             </h1>
             <p style={{ fontSize: '12px', color: '#94a3b8' }}>
@@ -146,6 +164,8 @@ function Admin() {
               boxShadow: '0 4px 14px rgba(55,138,221,0.35)',
               display: 'flex', alignItems: 'center', gap: '8px',
               transition: 'all 0.2s',
+              alignSelf: isMobile ? 'stretch' : 'auto',
+              justifyContent: isMobile ? 'center' : 'flex-start',
             }}
           >
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -153,7 +173,13 @@ function Admin() {
           </button>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginBottom: '28px' }}>
+        {/* Stats */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
+          gap: '12px',
+          marginBottom: '24px',
+        }}>
           {[
             { label: 'Total', count: projets.length },
             { label: 'Web', count: compteParCategorie('Web') },
@@ -177,27 +203,31 @@ function Admin() {
           })}
         </div>
 
+        {/* Tableau / Cards */}
         <div style={{
           background: card,
           border: '1.5px solid ' + border,
           borderRadius: '16px', overflow: 'hidden',
         }}>
 
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '2fr 1fr 1fr 1.4fr',
-            padding: '12px 20px',
-            background: darkMode ? '#0F1729' : '#F8FAFF',
-            borderBottom: '1px solid ' + border,
-          }}>
-            {['Projet', 'Categorie', 'Statut', 'Actions'].map(function(th) {
-              return (
-                <div key={th} style={{ fontSize: '10px', fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                  {th}
-                </div>
-              )
-            })}
-          </div>
+          {/* En-tête tableau (masqué sur mobile) */}
+          {!isMobile && (
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: isTablet ? '2fr 1fr 1.6fr' : '2fr 1fr 1fr 1.4fr',
+              padding: '12px 20px',
+              background: darkMode ? '#0F1729' : '#F8FAFF',
+              borderBottom: '1px solid ' + border,
+            }}>
+              {(isTablet ? ['Projet', 'Categorie', 'Actions'] : ['Projet', 'Categorie', 'Statut', 'Actions']).map(function(th) {
+                return (
+                  <div key={th} style={{ fontSize: '10px', fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    {th}
+                  </div>
+                )
+              })}
+            </div>
+          )}
 
           {loading ? (
             <div style={{ padding: '40px', textAlign: 'center', fontSize: '13px', color: '#94a3b8' }}>
@@ -220,14 +250,88 @@ function Admin() {
                 Ajouter votre premier projet
               </button>
             </div>
+          ) : isMobile ? (
+            /* Vue carte sur mobile */
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              {projets.map(function(projet, index) {
+                return (
+                  <div
+                    key={projet.id}
+                    style={{
+                      padding: '16px',
+                      borderBottom: index < projets.length - 1 ? '1px solid ' + border : 'none',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                      <div style={{
+                        width: '42px', height: '42px', borderRadius: '10px', flexShrink: 0,
+                        background: 'linear-gradient(135deg, #EFF6FF, #DBEAFE)',
+                        overflow: 'hidden',
+                      }}>
+                        {projet.imageUrl && (
+                          <img src={projet.imageUrl} alt={projet.titre} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        )}
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: '14px', fontWeight: 600, color: textPrimary, marginBottom: '4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          {projet.titre}
+                        </div>
+                        <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                          <span style={{
+                            fontSize: '10px', fontWeight: 600,
+                            padding: '2px 8px', borderRadius: '10px',
+                            background: darkMode ? '#1e3a5f' : '#EFF6FF',
+                            color: darkMode ? '#93C5FD' : '#378ADD',
+                            border: '1px solid ' + (darkMode ? '#1e4976' : '#DBEAFE'),
+                          }}>
+                            {projet.categorie}
+                          </span>
+                          <span style={{
+                            fontSize: '10px', fontWeight: 600,
+                            padding: '2px 8px', borderRadius: '10px',
+                            background: '#F0FDF4', color: '#16a34a',
+                            border: '1px solid #bbf7d0',
+                          }}>
+                            Publie
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button
+                        onClick={() => handleModifier(projet)}
+                        style={{
+                          flex: 1, padding: '9px', fontSize: '12px', fontWeight: 500,
+                          background: 'none', color: '#378ADD',
+                          border: '2px solid #DBEAFE', borderRadius: '50px', cursor: 'pointer',
+                        }}
+                      >
+                        Modifier
+                      </button>
+                      <button
+                        onClick={() => handleSupprimer(projet.id)}
+                        style={{
+                          flex: 1, padding: '9px', fontSize: '12px', fontWeight: 500,
+                          background: 'none', color: '#e11d48',
+                          border: '2px solid #fda4af', borderRadius: '50px', cursor: 'pointer',
+                        }}
+                      >
+                        Supprimer
+                      </button>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
           ) : (
+            /* Vue tableau sur desktop/tablet */
             projets.map(function(projet, index) {
               return (
                 <div
                   key={projet.id}
                   style={{
                     display: 'grid',
-                    gridTemplateColumns: '2fr 1fr 1fr 1.4fr',
+                    gridTemplateColumns: isTablet ? '2fr 1fr 1.6fr' : '2fr 1fr 1fr 1.4fr',
                     padding: '14px 20px',
                     borderBottom: index < projets.length - 1 ? '1px solid ' + border : 'none',
                     alignItems: 'center',
@@ -246,8 +350,8 @@ function Admin() {
                         <img src={projet.imageUrl} alt={projet.titre} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       )}
                     </div>
-                    <div>
-                      <div style={{ fontSize: '13px', fontWeight: 600, color: textPrimary }}>
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ fontSize: '13px', fontWeight: 600, color: textPrimary, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {projet.titre}
                       </div>
                       <div style={{ fontSize: '10px', color: '#94a3b8', marginTop: '1px' }}>
@@ -268,25 +372,27 @@ function Admin() {
                     </span>
                   </div>
 
-                  <div>
-                    <span style={{
-                      fontSize: '10px', fontWeight: 600,
-                      padding: '2px 8px', borderRadius: '10px',
-                      background: '#F0FDF4', color: '#16a34a',
-                      border: '1px solid #bbf7d0',
-                    }}>
-                      Publie
-                    </span>
-                  </div>
+                  {!isTablet && (
+                    <div>
+                      <span style={{
+                        fontSize: '10px', fontWeight: 600,
+                        padding: '2px 8px', borderRadius: '10px',
+                        background: '#F0FDF4', color: '#16a34a',
+                        border: '1px solid #bbf7d0',
+                      }}>
+                        Publie
+                      </span>
+                    </div>
+                  )}
 
-                  <div style={{ display: 'flex', gap: '8px' }}>
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                     <button
                       onClick={() => handleModifier(projet)}
                       style={{
                         padding: '7px 16px', fontSize: '11px', fontWeight: 500,
                         background: 'none', color: '#378ADD',
                         border: '2px solid #DBEAFE', borderRadius: '50px', cursor: 'pointer',
-                        transition: 'all 0.2s',
+                        transition: 'all 0.2s', whiteSpace: 'nowrap',
                       }}
                     >
                       Modifier
@@ -297,7 +403,7 @@ function Admin() {
                         padding: '7px 16px', fontSize: '11px', fontWeight: 500,
                         background: 'none', color: '#e11d48',
                         border: '2px solid #fda4af', borderRadius: '50px', cursor: 'pointer',
-                        transition: 'all 0.2s',
+                        transition: 'all 0.2s', whiteSpace: 'nowrap',
                       }}
                     >
                       Supprimer

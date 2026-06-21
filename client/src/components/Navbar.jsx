@@ -115,12 +115,12 @@ function Navbar() {
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200/60 dark:border-slate-700/60">
 
-        <div className="grid items-center gap-4 px-6 py-4" style={{gridTemplateColumns: '1fr auto 1fr'}}>
+        <div className="grid items-center gap-2 sm:gap-4 px-4 sm:px-6 py-3 sm:py-4" style={{gridTemplateColumns: '1fr auto 1fr'}}>
 
-          <div className="justify-self-start">
+          <div className="justify-self-start min-w-0">
             <Link to="/" className="no-underline">
               {/* Remplace logo.png par ton fichier dans client/public/ */}
-              <img src="/logo.png" alt="FOMEN Vannel" className="h-10 w-auto object-contain" />
+              <img src="/logo.png" alt="FOMEN Vannel" className="h-8 sm:h-10 w-auto object-contain" />
             </Link>
           </div>
 
@@ -168,7 +168,7 @@ function Navbar() {
         </div>
 
         {menuOpen && (
-          <div className="md:hidden px-4 pb-4 flex flex-col gap-1 border-t border-slate-200 dark:border-slate-700">
+          <div className="md:hidden px-4 pt-2 pb-4 flex flex-col gap-1 border-t border-slate-200 dark:border-slate-700">
             {navLinks.map((link) => (
               <a
                 key={link.id}

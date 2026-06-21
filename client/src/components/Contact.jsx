@@ -21,6 +21,8 @@ function Contact() {
   const [darkMode, setDarkMode] = useState(
     document.documentElement.classList.contains('dark')
   )
+  const width = useWindowWidth()
+  const isMobile = width < 768
 
   useEffect(function() {
     const mo = new MutationObserver(function() {
@@ -69,6 +71,7 @@ function Contact() {
     borderRadius: '10px', border: '1.5px solid ' + inputBorder,
     background: inputBg, color: textPrimary, outline: 'none',
     transition: 'border-color 0.2s',
+    boxSizing: 'border-box',
   }
 
   const labelStyle = {
@@ -80,7 +83,7 @@ function Contact() {
     <section
       id="contact"
       style={{
-        padding: '80px 32px',
+        padding: isMobile ? '40px 16px' : '56px 32px',
         background: bg,
         transition: 'background 0.3s ease',
       }}
@@ -99,7 +102,7 @@ function Contact() {
           }}>
             Me contacter
           </div>
-          <h2 style={{ fontSize: '28px', fontWeight: 700, color: textPrimary, marginBottom: '4px' }}>
+          <h2 style={{ fontSize: isMobile ? '22px' : '28px', fontWeight: 700, color: textPrimary, marginBottom: '4px' }}>
             Contact
           </h2>
           <p style={{ fontSize: '12px', color: textMuted, marginBottom: '8px' }}>
@@ -109,13 +112,13 @@ function Contact() {
         </div>
 
         {/* ---- GRILLE PRINCIPALE : 2 COLONNES ---- */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.6fr', gap: '24px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1.6fr', gap: '24px' }}>
 
           {/* ---- COLONNE GAUCHE : INFOS DE CONTACT ---- */}
           <div style={{
             background: card,
             border: '1.5px solid ' + border,
-            borderRadius: '20px', padding: '28px',
+            borderRadius: '20px', padding: isMobile ? '18px' : '28px',
           }}>
 
             <h3 style={{ fontSize: '14px', fontWeight: 700, color: textPrimary, marginBottom: '6px' }}>
@@ -196,13 +199,13 @@ function Contact() {
           <div style={{
             background: card,
             border: '1.5px solid ' + border,
-            borderRadius: '20px', padding: '28px',
+            borderRadius: '20px', padding: isMobile ? '18px' : '28px',
           }}>
 
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
 
               {/* Nom + Email sur la meme ligne */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '12px' }}>
                 <div>
                   <label style={labelStyle}>Nom</label>
                   <input

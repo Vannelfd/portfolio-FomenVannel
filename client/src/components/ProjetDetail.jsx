@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getProjet } from '../api/index'
 import Navbar from '../components/Navbar'
+import useWindowWidth from '../hooks/useWindowWidth'
 
 const GitHubIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -17,6 +18,8 @@ function ProjetDetail() {
   const [darkMode, setDarkMode] = useState(
     document.documentElement.classList.contains('dark')
   )
+  const width = useWindowWidth()
+  const isMobile = width < 640
 
   useEffect(function() {
     getProjet(id).then(function(res) {
@@ -55,7 +58,7 @@ function ProjetDetail() {
   return (
     <div style={{ minHeight: '100vh', background: darkMode ? '#0F1729' : '#F8FAFF', transition: 'background 0.3s ease' }}>
       <Navbar />
-      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '100px 32px 60px' }}>
+      <div style={{ maxWidth: '900px', margin: '0 auto', padding: isMobile ? '88px 16px 40px' : '100px 32px 60px' }}>
 
         <button
           onClick={() => navigate('/#projets')}
@@ -78,12 +81,12 @@ function ProjetDetail() {
         }}>
 
           {projet.imageUrl && (
-            <div style={{ width: '100%', height: '320px', overflow: 'hidden' }}>
+            <div style={{ width: '100%', height: isMobile ? '200px' : '320px', overflow: 'hidden' }}>
               <img src={projet.imageUrl} alt={projet.titre} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
           )}
 
-          <div style={{ padding: '32px' }}>
+          <div style={{ padding: isMobile ? '18px' : '32px' }}>
 
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
               <span style={{
@@ -100,7 +103,7 @@ function ProjetDetail() {
               </span>
             </div>
 
-            <h1 style={{ fontSize: '28px', fontWeight: 700, color: darkMode ? '#E2E8F0' : '#1E293B', marginBottom: '12px' }}>
+            <h1 style={{ fontSize: isMobile ? '20px' : '28px', fontWeight: 700, color: darkMode ? '#E2E8F0' : '#1E293B', marginBottom: '12px' }}>
               {projet.titre}
             </h1>
 
@@ -129,7 +132,7 @@ function ProjetDetail() {
               </div>
             </div>
 
-            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: '12px', flexWrap: 'wrap' }}>
               {projet.lienDemo && (
                 <a
                   href={projet.lienDemo}
@@ -137,10 +140,12 @@ function ProjetDetail() {
                   rel="noreferrer"
                   style={{
                     fontSize: '13px', fontWeight: 500,
-                    padding: '11px 28px', borderRadius: '50px',
+                    padding: isMobile ? '10px 20px' : '11px 28px', borderRadius: '50px',
                     background: '#378ADD', color: 'white',
                     textDecoration: 'none',
                     boxShadow: '0 4px 14px rgba(55,138,221,0.35)',
+                    flex: isMobile ? '1' : 'none',
+                    textAlign: 'center',
                   }}
                 >
                   Voir la demo
@@ -153,12 +158,13 @@ function ProjetDetail() {
                   rel="noreferrer"
                   style={{
                     fontSize: '13px', fontWeight: 500,
-                    padding: '11px 28px', borderRadius: '50px',
+                    padding: isMobile ? '10px 20px' : '11px 28px', borderRadius: '50px',
                     background: 'none',
                     color: darkMode ? '#E2E8F0' : '#1E293B',
                     border: '2px solid ' + (darkMode ? 'rgba(59,130,246,0.3)' : '#E2E8F0'),
                     textDecoration: 'none',
-                    display: 'flex', alignItems: 'center', gap: '8px',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                    flex: isMobile ? '1' : 'none',
                   }}
                 >
                   <GitHubIcon /> Voir sur GitHub

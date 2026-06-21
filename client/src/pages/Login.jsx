@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { login } from '../api/index'
+import useWindowWidth from '../hooks/useWindowWidth'
 
 function Login() {
   const navigate = useNavigate()
+  const width = useWindowWidth()
+  const isMobile = width < 480
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -42,7 +45,7 @@ function Login() {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '32px',
+      padding: isMobile ? '16px' : '32px',
       transition: 'background 0.3s ease',
     }}>
       <div style={{
@@ -51,7 +54,7 @@ function Login() {
         background: card,
         border: '1.5px solid ' + border,
         borderRadius: '20px',
-        padding: '40px 32px',
+        padding: isMobile ? '28px 20px' : '40px 32px',
       }}>
 
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
@@ -90,6 +93,7 @@ function Login() {
                 width: '100%', padding: '11px 14px', fontSize: '13px',
                 borderRadius: '10px', border: '1.5px solid ' + inputBorder,
                 background: inputBg, color: textPrimary, outline: 'none',
+                boxSizing: 'border-box',
               }}
             />
           </div>
@@ -108,6 +112,7 @@ function Login() {
                 width: '100%', padding: '11px 14px', fontSize: '13px',
                 borderRadius: '10px', border: '1.5px solid ' + inputBorder,
                 background: inputBg, color: textPrimary, outline: 'none',
+                boxSizing: 'border-box',
               }}
             />
           </div>

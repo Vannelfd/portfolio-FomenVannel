@@ -148,30 +148,41 @@ function CatCard({ cat, visible, darkMode, cardIndex }) {
         </span>
       </div>
 
-      {cat.competences.map((skill) => (
-        <div key={skill.nom} style={{ marginBottom: '10px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px', alignItems: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-              <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: c.dot, flexShrink: 0 }} />
-              <span style={{ fontSize: '13px', color: darkMode ? '#CBD5E1' : '#334155', fontWeight: 500 }}>
-                {skill.nom}
+      {cat.competences.map((skill, skillIndex) => {
+        const itemDelay = cardIndex * 0.12 + 0.25 + skillIndex * 0.1
+        return (
+          <div
+            key={skill.nom}
+            style={{
+              marginBottom: '10px',
+              opacity: visible ? 1 : 0,
+              transform: visible ? 'translateY(0px)' : 'translateY(20px)',
+              transition: `opacity 0.5s ease ${itemDelay}s, transform 0.5s ease ${itemDelay}s`,
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px', alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: c.dot, flexShrink: 0 }} />
+                <span style={{ fontSize: '13px', color: darkMode ? '#CBD5E1' : '#334155', fontWeight: 500 }}>
+                  {skill.nom}
+                </span>
+              </div>
+              <span style={{ fontSize: '12px', fontWeight: 600, color: c.pct }}>
+                {skill.niveau}%
               </span>
             </div>
-            <span style={{ fontSize: '12px', fontWeight: 600, color: c.pct }}>
-              {skill.niveau}%
-            </span>
+            <div style={{ height: '4px', background: c.barBg, borderRadius: '10px', overflow: 'hidden' }}>
+              <div style={{
+                height: '100%',
+                borderRadius: '10px',
+                background: c.bar,
+                width: visible ? skill.niveau + '%' : '0%',
+                transition: `width 1.2s ease-out ${itemDelay + 0.1}s`,
+              }} />
+            </div>
           </div>
-          <div style={{ height: '4px', background: c.barBg, borderRadius: '10px', overflow: 'hidden' }}>
-            <div style={{
-              height: '100%',
-              borderRadius: '10px',
-              background: c.bar,
-              width: visible ? skill.niveau + '%' : '0%',
-              transition: 'width 1.5s ease-out',
-            }} />
-          </div>
-        </div>
-      ))}
+        )
+      })}
     </div>
   )
 }
@@ -213,7 +224,7 @@ function Competences() {
       id="competences"
       ref={sectionRef}
       style={{
-        padding: '80px 32px',
+        padding: isMobile ? '40px 16px' : '56px 32px',
         background: darkMode ? '#0F1729' : '#F8FAFF',
         transition: 'background 0.3s ease',
       }}
@@ -242,7 +253,7 @@ function Competences() {
             Mes competences
           </div>
           <h2 style={{
-            fontSize: '36px', fontWeight: 700,
+            fontSize: isMobile ? '26px' : '36px', fontWeight: 700,
             color: darkMode ? '#E2E8F0' : '#1E293B',
             marginBottom: '8px',
             opacity: visible ? 1 : 0,
