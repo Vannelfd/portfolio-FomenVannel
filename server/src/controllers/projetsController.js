@@ -7,7 +7,8 @@ const getTousLesProjets = async (req, res) => {
     })
     res.json(projets)
   } catch (error) {
-    res.status(500).json({ message: 'Erreur serveur', error })
+    console.error(error)
+    res.status(500).json({ message: 'Erreur serveur' })
   }
 }
 
@@ -19,7 +20,8 @@ const getUnProjet = async (req, res) => {
     if (!projet) return res.status(404).json({ message: 'Projet non trouvé' })
     res.json(projet)
   } catch (error) {
-    res.status(500).json({ message: 'Erreur serveur', error })
+    console.error(error)
+    res.status(500).json({ message: 'Erreur serveur' })
   }
 }
 
@@ -31,7 +33,8 @@ const creerProjet = async (req, res) => {
     })
     res.status(201).json(projet)
   } catch (error) {
-    res.status(500).json({ message: 'Erreur serveur', error })
+    console.error(error)
+    res.status(500).json({ message: 'Erreur serveur' })
   }
 }
 
@@ -44,7 +47,8 @@ const modifierProjet = async (req, res) => {
     })
     res.json(projet)
   } catch (error) {
-    res.status(500).json({ message: 'Erreur serveur', error })
+    console.error(error)
+    res.status(500).json({ message: 'Erreur serveur' })
   }
 }
 
@@ -53,7 +57,8 @@ const supprimerProjet = async (req, res) => {
     await prisma.projet.delete({ where: { id: req.params.id } })
     res.json({ message: 'Projet supprimé avec succès' })
   } catch (error) {
-    res.status(500).json({ message: 'Erreur serveur', error })
+    console.error(error)
+    res.status(500).json({ message: 'Erreur serveur' })
   }
 }
 

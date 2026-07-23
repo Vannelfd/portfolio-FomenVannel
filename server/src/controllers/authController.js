@@ -20,7 +20,8 @@ const login = async (req, res) => {
 
     res.json({ token, message: 'Connexion réussie' })
   } catch (error) {
-    res.status(500).json({ message: 'Erreur serveur', error })
+    console.error(error)
+    res.status(500).json({ message: 'Erreur serveur' })
   }
 }
 
